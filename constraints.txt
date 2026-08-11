@@ -1,0 +1,8 @@
+# requirements.txt
+
+microbit-stubs==0.2.0
+microfs==1.4.5
+mpremote==1.28.0
+platformdirs==4.11.0
+pyserial==3.5
+uflash==2.0.0

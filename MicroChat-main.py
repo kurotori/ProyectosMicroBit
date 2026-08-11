@@ -9,7 +9,8 @@ uart.init(baudrate=115200)
 
 serial_buffer = ""
 
-# Estados: 0 - inicial, 1 - sesion iniciada, 2 - inciando sesión
+# Estados: 0 - inicial, 1 - sesion iniciada, 2 - iniciando sesión
+#           3 - en chat, 4 - en listado de usuarios
 estado = 0
 
 # SubEstados: 1 - Menu Principal, 2 - Chat, 3 - Lista de Usuarios
@@ -62,7 +63,7 @@ def menuPrincipal():
     lineaDecorada()
     escribir("Menú Principal")
     linea()
-    ('1 - Ir al Chat')
+    escribir('1 - Ir al Chat')
     escribir('2 - Mostrar Usuarios')
         #opcion=input('Opción:')
         
@@ -99,20 +100,20 @@ def evaluarMensaje(mensaje):
     if (orden=='nuevoLogin'):
         if(valor==nombre):
             enviarMensaje('nombreRepetido','')
-    if (orden=='nombreRepetido'):
+    elif (orden=='nombreRepetido'):
         escribir('ERROR: Ese nombre ya está en uso')
         escribir('Intenta nuevamente con otro nombre')
         linea()
         estado=0
-    if(orden=='holaSoy'):
+    elif(orden=='holaSoy'):
         usuario=valor[0:(valor.find(':'))]
         idPlaca=valor[(valor.find(':'))+1:len(valor)]
         if usuarios.count(usuario)<1:
             usuarios.append(usuario)
             placas.append(idPlaca)
             enviarMensaje('holaSoy',nombre+':'+placa)
-    if (orden=='m'):
-        if estado==1 and subEstado==2:
+    elif (orden=='m'):
+        if estado==3:
             usuario=valor[0:(valor.find(':'))]
             msj=valor[(valor.find(':'))+1:len(valor)]
             escribir(usuario+':'+msj)
@@ -120,12 +121,7 @@ def evaluarMensaje(mensaje):
 
 
 # Interfaz de usuario inicial
-display.show(Image( '06060:'
-                    '09090:'
-                    '90009:'
-                    '96069:'
-                    '09990'))
-
+display.scroll("MicroChat v1")
 
 if estado == 0:
     lineaDecorada()
@@ -137,7 +133,6 @@ if estado == 0:
 
 # Code in a 'while True:' loop repeats forever
 while True:
-    
     # Recepción de mensajes - Siempre activa
     mensaje = radio.receive()
     if mensaje:
@@ -188,12 +183,15 @@ while True:
                         
                     elif estado == 1:
                         if serial_buffer=='1':
-                            subEstado=2
+                            estado=3
                             lineaDecorada()
                             escribir('CHAT')
                             linea()
                             escribir('Ingresa tu mensaje y presiona Enter para enviarlo')
                             linea()
+                    
+                    elif estado == 3:
+                        enviarMensaje("m",nombre+':'+serial_buffer)
                     
                         
                     # Reset the string container for the next phrase
@@ -206,6 +204,9 @@ while True:
                 serial_buffer += char
 
     # Microsecond pause to keep processing stable
+    display.set_pixel(estado,0,3)
+    sleep(10)
+    display.clear
     sleep(10)
     
 #    if (estado == 0):
