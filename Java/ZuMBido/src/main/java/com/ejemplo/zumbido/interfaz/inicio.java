@@ -8,6 +8,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import java.awt.BorderLayout;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 
 /**
@@ -16,7 +17,10 @@ import javax.swing.JFrame;
  */
 public class inicio extends JFrame{
     
-    private JComboBox cmbListaPuertos;
+    private JPanel pnlBarraHerramientas;
+    private JPanel pnlPrincipal;
+
+    private JComboBox<String> cmbListaPuertos;
     
     private SerialPort[] puertos;
 
@@ -27,13 +31,14 @@ public class inicio extends JFrame{
     
     private void configurar(){
         setSize(640,480);
+        setTitle("Listado De Placas");
         setVisible(true);
         getContentPane().setLayout( new BorderLayout());
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         listaDePuertos();
         
-        cmbListaPuertos = new JComboBox();
+        cmbListaPuertos = new JComboBox<String>();
         for (SerialPort puerto : puertos) {
             cmbListaPuertos.addItem(puerto.getSystemPortName());
         }
