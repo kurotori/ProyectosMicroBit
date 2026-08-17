@@ -6,8 +6,14 @@ package com.ejemplo.zumbido.interfaz;
 
 import com.fazecast.jSerialComm.SerialPort;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 
 /**
@@ -16,34 +22,70 @@ import javax.swing.JFrame;
  */
 public class inicio extends JFrame{
     
-    private JComboBox cmbListaPuertos;
+    private JComboBox<String> cmbListaPuertos;
+    private JComboBox<String> cmbGrupos;
+    private JPanel pnlSelectores;
+    private JPanel pnlSelectorPuertos;
+    private JPanel pnlSelectorGrupos;
+    
     
     private SerialPort[] puertos;
 
     public inicio(){
         configurar();
-        
+        configurarFunciones();
     }
     
     private void configurar(){
-        setSize(640,480);
+        setSize(320,240);
         setVisible(true);
         getContentPane().setLayout( new BorderLayout());
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         listaDePuertos();
         
-        cmbListaPuertos = new JComboBox();
-        for (SerialPort puerto : puertos) {
-            cmbListaPuertos.addItem(puerto.getSystemPortName());
-        }
-        getContentPane().add(cmbListaPuertos, BorderLayout.NORTH);
+        pnlSelectores = new JPanel(new BorderLayout());
+        pnlSelectores.setPreferredSize(new Dimension(0,120));
+        pnlSelectores.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
+        
+        
+        
+        
+        pnlSelectorPuertos = new JPanel(new FlowLayout());
+        pnlSelectorPuertos.setPreferredSize(new Dimension(0,60));
+        pnlSelectores.add(pnlSelectorPuertos, BorderLayout.NORTH);
+        
+        pnlSelectorGrupos = new JPanel(new FlowLayout());
+        pnlSelectorGrupos.setPreferredSize(new Dimension(0,60));
+        pnlSelectores.add(pnlSelectorGrupos, BorderLayout.SOUTH);
+        
+        cmbListaPuertos = new JComboBox<>();
+        
+        cmbGrupos = new JComboBox<>();
+        
+        pnlSelectorGrupos.add(new JLabel("Grupos:"));
+        pnlSelectorGrupos.add(cmbGrupos, BorderLayout.NORTH);
+        pnlSelectorPuertos.add(new JLabel("Puertos:"));
+        pnlSelectorPuertos.add(cmbListaPuertos, BorderLayout.CENTER);
+        
+        getContentPane().add(pnlSelectores, BorderLayout.NORTH);
         
         getContentPane().validate();
         getContentPane().repaint();
         
     }
     
+    
+    private void configurarFunciones(){
+        for (SerialPort puerto : puertos) {
+            cmbListaPuertos.addItem(puerto.getSystemPortName());
+        }
+        
+        for (int i = 0; i < 256; i++) {
+            cmbGrupos.addItem("Grupo "+i );
+        }
+        
+    }
     
     private void listaDePuertos(){
         this.puertos = SerialPort.getCommPorts();
