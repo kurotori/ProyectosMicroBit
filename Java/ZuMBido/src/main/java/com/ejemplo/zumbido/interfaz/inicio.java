@@ -38,6 +38,7 @@ public class inicio extends JFrame{
     
     private void configurar(){
         setSize(320,240);
+        setTitle("Listado De Placas");
         setVisible(true);
         getContentPane().setLayout( new BorderLayout());
         setLocationRelativeTo(null);
