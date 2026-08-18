@@ -9,6 +9,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.InputStream;
+import java.io.Serial;
+
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -20,7 +25,7 @@ import javax.swing.JPanel;
  *
  * @author sebastian
  */
-public class inicio extends JFrame{
+public class inicio_old extends JFrame{
     
     private JComboBox<String> cmbListaPuertos;
     private JComboBox<String> cmbGrupos;
@@ -31,7 +36,7 @@ public class inicio extends JFrame{
     
     private SerialPort[] puertos;
 
-    public inicio(){
+    public inicio_old(){
         configurar();
         configurarFunciones();
     }
@@ -85,9 +90,41 @@ public class inicio extends JFrame{
         for (int i = 0; i < 256; i++) {
             cmbGrupos.addItem("Grupo "+i );
         }
+
+        cmbListaPuertos.addActionListener(
+           new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               seleccionarPuerto();
+               
+            }
+             
+           }
+        );
         
     }
     
+
+    private void seleccionarPuerto(){
+        String puerto = (String)cmbListaPuertos.getSelectedItem();
+        System.out.println(puerto);
+        SerialPort p = SerialPort.getCommPort(puerto);
+        p.setBaudRate(115200);
+        p.openPort();
+        p.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0);
+        InputStream in = p.getInputStream();
+        try{
+            for (int j = 0; j < 1000; ++j)
+            System.out.print((char)in.read());
+                in.close();
+        } 
+        catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        p.closePort();
+    }
+
     private void listaDePuertos(){
         this.puertos = SerialPort.getCommPorts();
         
@@ -106,7 +143,7 @@ public class inicio extends JFrame{
     }
     
     public static void main(String[] args) {
-        new inicio();
+        new inicio_old();
     }
     
 }
