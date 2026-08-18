@@ -39,7 +39,8 @@ public class InicioGateway extends JFrame {
 
     private void configurarVentana() {
         setTitle("Micro:bit Radio Gateway");
-        setSize(500, 400);
+        setSize(640, 480);
+        setFont(fuentes.VENTANA_NORMAL_A);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -47,12 +48,17 @@ public class InicioGateway extends JFrame {
         // Panel Superior: Selección de Puerto
         JPanel pnlSuperior = new JPanel(new FlowLayout());
         cmbListaPuertos = new JComboBox<>();
+        cmbListaPuertos.setFont(fuentes.VENTANA_NORMAL_A_CH);
         cargarPuertosDisponibles();
         
         JButton btnConectar = new JButton("Conectar");
+        btnConectar.setFont(fuentes.VENTANA_NEGRITA_A);
         btnConectar.addActionListener(e -> conectarPuerto());
         
-        pnlSuperior.add(new JLabel("Puerto:"));
+        JLabel lblP = new JLabel("Puerto:");
+        lblP.setFont(fuentes.VENTANA_NEGRITA_A);
+        pnlSuperior.add(lblP);
+         
         pnlSuperior.add(cmbListaPuertos);
         pnlSuperior.add(btnConectar);
         add(pnlSuperior, BorderLayout.NORTH);
@@ -88,6 +94,7 @@ public class InicioGateway extends JFrame {
         //Panel de Estado
         pnlEstado = new JPanel(new BorderLayout());
         lblEstado = new JLabel("Placa: ");
+        lblEstado.setFont(fuentes.VENTANA_NEGRITA_A);
         pnlEstado.add(lblEstado, BorderLayout.PAGE_START);
         
         //pnlEstado.setPreferredSize(new Dimension(0,50));
@@ -219,11 +226,23 @@ public class InicioGateway extends JFrame {
         String[] cadena = mensaje.split(":");
         
         switch (cadena[0]) {
-            case Mensajes.BID:
+            case Mensajes.BOARD_ID:
+                idPlaca = cadena[1];
                 lblEstado.setText( lblEstado.getText() + cadena[1]);
                 break;
             case Mensajes.RECIBIDO:
                 System.out.println("La placa dice: " + mensaje);
+                break;
+            case Mensajes.COMANDO:
+                
+                switch (cadena[1]) {
+                    case Mensajes.GRUPO_RADIO:
+                        
+                        break;
+                    default:
+                        throw new AssertionError();
+                }
+                
                 break;
             default:
                 System.out.println("ERROR: Mensaje desconocido: " + mensaje);
@@ -232,6 +251,29 @@ public class InicioGateway extends JFrame {
     }
     
     
+    private int elegirGrupoRadio(){
+        String[] canales = new String[256];
+        for (int i = 0; i < canales.length; i++) {
+            canales[i] = ""+i;
+        }
+        
+        String seleccion = (String)JOptionPane.showInputDialog(
+                null,
+                "Elige un grupo de radio",
+                "Grupo",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                canales,
+                canales[0]
+        );
+        
+        if (seleccion!=null) {
+            return Integer.parseInt(seleccion);
+        }
+        else{
+            return 0;
+        }
+    }
     
     
     public static void main(String[] args) {

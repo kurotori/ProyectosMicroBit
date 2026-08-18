@@ -17,5 +17,7 @@ public class Mensajes {
     public static final String RECIBIDO = "recibido";
     
     // 2 - Sub comandos
-    public static final String BID = "bid";
+    public static final String BOARD_ID = "bid";
+    public static final String GRUPO_RADIO = "gr";
+    
 }

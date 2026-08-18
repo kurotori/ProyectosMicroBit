@@ -16,11 +16,22 @@ buffer_serial = ""
 
 def escribir(texto):
     uart.write(texto + '\r\n')
+    
+def enviarRadio(mensaje):
+    radio.send(mensaje)
+    parpadear(4,0,9,100)
 
+def parpadear(xLed, yLed, intensidad, tiempo):
+    fin = running_time() + tiempo
+    while(running_time()<fin):
+        display.set_pixel(xLed,yLed,intensidad);
+    display.set_pixel(xLed,yLed,0);
+    
 
 def evaluarComando(comando):
    if(comando=="iniciar"):
        escribir("bid:"+id_placa)
+       
         
 
 while True:
@@ -47,7 +58,8 @@ while True:
                     # Emitir el comando a la red RF
                     escribir("recibido:" + comando)
                     evaluarComando(comando)
-                    radio.send(comando)
+                    # radio.send(comando)
+                    enviarRadio(comando)
                     buffer_serial = ""
             else:
                 buffer_serial += char
