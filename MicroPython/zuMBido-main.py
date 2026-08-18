@@ -29,8 +29,11 @@ def parpadear(xLed, yLed, intensidad, tiempo):
     
 
 def evaluarComando(comando):
-   if(comando=="iniciar"):
+    if(comando=="iniciar"):
        escribir("bid:"+id_placa)
+       escribir("c:gr")
+    #if(comando=="gr"):
+        
        
         
 
