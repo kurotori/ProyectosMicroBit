@@ -32,10 +32,12 @@ def evaluarComando(comando):
     orden=comando[0:(comando.find(':'))]
     
     if(orden=="iniciar"):
-       escribir("bid:"+id_placa)
+       escribir("c:bid:"+id_placa)
        escribir("c:gr")
     if(orden=="gr"):
-        grupo=
+        grupo=comando[(comando.find(grupo))+1:len(comando)]
+        escribir("m:b:Grupo establecido a " + grupo)
+        radio.config(group=int(grupo))
 
 while True:
     # -------------------------------------------------------------
