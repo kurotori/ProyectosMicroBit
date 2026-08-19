@@ -29,10 +29,13 @@ def parpadear(xLed, yLed, intensidad, tiempo):
     
 
 def evaluarComando(comando):
-   if(comando=="iniciar"):
+    orden=comando[0:(comando.find(':'))]
+    
+    if(orden=="iniciar"):
        escribir("bid:"+id_placa)
-       
-        
+       escribir("c:gr")
+    if(orden=="gr"):
+        grupo=
 
 while True:
     # -------------------------------------------------------------
