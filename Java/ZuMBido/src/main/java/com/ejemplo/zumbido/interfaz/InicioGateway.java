@@ -238,7 +238,7 @@ public class InicioGateway extends JFrame {
                 switch (cadena[1]) {
                     case Mensajes.GRUPO_RADIO:
                         int grupo = elegirGrupoRadio();
-                        
+                        enviarComando("");
                         break;
                     default:
                         throw new AssertionError();
